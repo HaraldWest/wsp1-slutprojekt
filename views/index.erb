@@ -3,11 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projekt #2</title>
-    <link rel="stylesheet" type="text/css" href="/style.css?<%=Time.now.to_i%>">
+    <title>Körkortsquiz</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-  <h1>Webbserverprogrammering 1 - Projekt 3 - mall</h1>
-  <img src="/img/glhf.png">
+    <header>
+        <h1>Välkommen till Körkortsquizet</h1>
+        <p>Logga in för att komma igång med dina tester.</p>
+    </header>
+    <main id="main-content">
+        <!-- Inloggningsformulär -->
+        <section id="login-section">
+            <h2>Logga in</h2>
+            <form id="login-form">
+                <label for="username">Användarnamn:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Lösenord:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Logga in</button>
+            </form>
+        </section>
+
+        <!-- Huvudmeny (visas efter inloggning) -->
+        <section id="menu-section" style="display: none;">
+            <h2>Välj ett alternativ</h2>
+            <button id="view-results">Visa tidigare resultat</button>
+            <button id="new-quiz">Gör nytt prov</button>
+        </section>
+
+        <!-- Quizsektionen -->
+        <section id="quiz-section" style="display: none;">
+            <form id="quiz-form">
+                <div id="quiz-container">
+                    <!-- Frågor genereras här med JavaScript -->
+                </div>
+                <button type="submit">Skicka in svar</button>
+            </form>
+        </section>
+
+        <!-- Resultatvisning -->
+        <section id="results-section" style="display: none;">
+            <h2>Dina tidigare resultat</h2>
+            <ul id="results-list">
+                <!-- Resultat fylls i med JavaScript -->
+            </ul>
+            <button id="back-to-menu">Tillbaka till huvudmenyn</button>
+        </section>
+    </main>
+    <footer>
+        <p></p>
+    </footer>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const menuSection = document.getElementById('menu-section');
+        const loginSection = document.getElementById('login-section');
+        const quizSection = document.getElementById('quiz-section');
+        const resultsSection = document.getElementById('results-section');
+        const resultsList = document.getElementById('results-list');
+
+        const questions = [
+            { question: "Vad är högsta tillåtna hastighet på en motorväg?", options: ["90 km/h", "110 km/h", "120 km/h"], correct: 2 },
+            { question: "Vad betyder en heldragen linje?", options: ["Parkering förbjuden", "Kör inte över linjen", "Rekommenderad körbana"], correct: 1 },
+            // Lägg till fler frågor här...
+        ];
+
+        let userResults = [];
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            loginSection.style.display = 'none';
+            menuSection.style.display = 'block';
+        });
+
+        document.getElementById('new-quiz').addEventListener('click', () => {
+            menuSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            loadQuiz();
+        });
+
+        document.getElementById('view-results').addEventListener('click', () => {
+            menuSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+            displayResults();
+        });
+
+        document.getElementById('back-to-menu').addEventListener('click', () => {
+            resultsSection.style.display = 'none';
+            menuSection.style.display = 'block';
+        });
+
+        function loadQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionDiv.appendChild(questionText);
+
+                q.options.forEach((option, i) => {
+                    const label = document.createElement('label');
+                    label.textContent = option;
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question-${index}`;
+                    input.value = i;
+                    label.prepend(input);
+
+                    questionDiv.appendChild(label);
+                });
+
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        document.getElementById('quiz-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let score = 0;
+
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+                if (selected && parseInt(selected.value) === q.correct) {
+                    score++;
+                }
+            });
+
+            userResults.push(score);
+
+            if (score >= 52) {
+                alert(`Grattis! Du fick ${score} rätt och är godkänd!`);
+            } else {
+                alert(`Du fick ${score} rätt. Försök igen!`);
+            }
+
+            quizSection.style.display = 'none';
+            menuSection.style.display = 'block';
+            loginSection.style.display = 'block';
+        });
+
+        function displayResults() {
+            resultsList.innerHTML = '';
+            userResults.forEach((result, index) => {
+                const li = document.createElement('li');
+                li.textContent = `Prov ${index + 1}: ${result} rätt`;
+                resultsList.appendChild(li);
+            });
+        }
+    </script>
 </body>
 </html>
