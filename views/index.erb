@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Körkortsquiz</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <header>
@@ -12,7 +12,6 @@
         <p>Logga in för att komma igång med dina tester.</p>
     </header>
     <main id="main-content">
-        <!-- Inloggningsformulär -->
         <section id="login-section">
             <h2>Logga in</h2>
             <form id="login-form">
@@ -26,14 +25,13 @@
             </form>
         </section>
 
-        <!-- Huvudmeny (visas efter inloggning) -->
         <section id="menu-section" style="display: none;">
             <h2>Välj ett alternativ</h2>
             <button id="view-results">Visa tidigare resultat</button>
             <button id="new-quiz">Gör nytt prov</button>
         </section>
 
-        <!-- Quizsektionen -->
+        
         <section id="quiz-section" style="display: none;">
             <form id="quiz-form">
                 <div id="quiz-container">
@@ -43,11 +41,11 @@
             </form>
         </section>
 
-        <!-- Resultatvisning -->
+        
         <section id="results-section" style="display: none;">
             <h2>Dina tidigare resultat</h2>
             <ul id="results-list">
-                <!-- Resultat fylls i med JavaScript -->
+                
             </ul>
             <button id="back-to-menu">Tillbaka till huvudmenyn</button>
         </section>
