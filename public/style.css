@@ -55,11 +55,21 @@ input[type="password"] {
 }
 
 .question {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
   margin-bottom: 15px;
   padding: 10px;
   background: #eef;
   border-radius: 5px;
 }
+
+.question img {
+  width: 80px; +
+  height: auto;
+  border-radius: 5px; 
+}
+
 
 label {
   display: block;
