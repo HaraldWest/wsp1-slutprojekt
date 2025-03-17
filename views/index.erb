@@ -1,193 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Körkortsquiz</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Välkommen till Körkortsquizet</h1>
-        <p>Logga in för att komma igång med dina tester.</p>
-    </header>
-    <main id="main-content">
-        <section id="login-section">
-            <h2>Logga in</h2>
-            <form id="login-form">
-                <label for="username">Användarnamn:</label>
-                <input type="text" id="username" name="username" required>
-
-                <label for="password">Lösenord:</label>
-                <input type="password" id="password" name="password" required>
-
-                <button type="submit">Logga in</button>
-            </form>
-        </section>
-
-        <section id="menu-section" style="display: none;">
-            <h2>Välj ett alternativ</h2>
-            <button id="view-results">Visa tidigare resultat</button>
-            <button id="new-quiz">Gör nytt prov</button>
-        </section>
-
-        
-        <section id="quiz-section" style="display: none;">
-            <form id="quiz-form">
-                <div id="quiz-container">
-                    <!-- Frågor genereras här med JavaScript -->
-                </div>
-                <button type="submit">Skicka in svar</button>
-            </form>
-        </section>
-
-        
-        <section id="results-section" style="display: none;">
-            <h2>Dina tidigare resultat</h2>
-            <ul id="results-list">
-                
-            </ul>
-            <button id="back-to-menu">Tillbaka till huvudmenyn</button>
-        </section>
-    </main>
-    <footer>
-        <p></p>
-    </footer>
-
     <script>
-        const loginForm = document.getElementById('login-form');
-        const menuSection = document.getElementById('menu-section');
-        const loginSection = document.getElementById('login-section');
-        const quizSection = document.getElementById('quiz-section');
-        const resultsSection = document.getElementById('results-section');
-        const resultsList = document.getElementById('results-list');
+        async function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-        const questions = [
-            { question: "Vad är högsta tillåtna hastighet på en motorväg?", options: ["90 km/h", "110 km/h", "120 km/h"], correct: 2 },
-            { question: "Vad betyder en heldragen linje?", options: ["Parkering förbjuden", "Kör inte över linjen", "Rekommenderad körbana"], correct: 1 },
-            { question: "Upp till vilken hastighet får man köra om på insidan?", options: ["60 km/h", "80 km/h", "70 km/h"], correct: 3},
-            { question: "Vilket vägmärke betyder att du måste lämna företräde?", options: ["Stoppskylt", "Väjningsplikt", "Huvudled"], correct: 1 },  
-            { question: "När måste du använda dimljus?", options: ["Vid kraftig dimma eller kraftigt regn", "Bara på natten", "Endast på landsväg"], correct: 0 },  
-            { question: "Vilken promillehalt räknas som rattfylleri i Sverige?", options: ["0,1‰", "0,2‰", "0,5‰"], correct: 1 },  
-            { question: "Hur långt ska avståndet vara till framförvarande bil i torrt väglag?", options: ["Minst 1 sekund", "Minst 2 sekunder", "Minst 3 sekunder"], correct: 1 },  
-            { question: "Vad betyder ett gult blinkande trafikljus?", options: ["Stanna omedelbart", "Kör försiktigt, varning för fara", "Trafikljuset är ur funktion"], correct: 1 },  
-            { question: "Vilken är högsta tillåtna hastighet på en motortrafikled om inget annat anges?", options: ["90 km/h", "110 km/h", "120 km/h"], correct: 1 },  
-            { question: "Vilken färg har en vägskylt som visar motorväg?", options: ["Röd", "Grön", "Blå"], correct: 2 },  
-            { question: "Vad betyder en röd cirkel runt ett vägmärke?", options: ["Varning", "Förbud", "Påbud"], correct: 1 },  
-            { question: "Vilken ålder gäller som minimiålder för att övningsköra personbil?", options: ["15 år", "16 år", "17 år"], correct: 1 },  
-            { question: "Hur fort får en tung lastbil köra på motorväg?", options: ["80 km/h", "90 km/h", "100 km/h"], correct: 0 },  
-            { question: "Vad betyder en blå vägskylt med vit symbol?", options: ["Vägvisning", "Varningsskylt", "Påbud"], correct: 2 },  
-            { question: "Vad är minsta mönsterdjup på sommardäck enligt lag?", options: ["1,6 mm", "2,0 mm", "3,0 mm"], correct: 0 },  
-            { question: "När får du använda helljus i mörker?", options: ["Alltid", "När det är mörkt och du inte bländar andra", "Endast på landsväg"], correct: 1 },  
-            { question: "Vilket vägmärke betyder huvudled?", options: ["Gult och rött rombformat", "Blå skylt med vit pil", "Blå skylt med vit bil"], correct: 0 },  
-            { question: "Vad är maxhastigheten för en moped klass 1?", options: ["30 km/h", "45 km/h", "50 km/h"], correct: 1 },  
-            { question: "När är du skyldig att använda bilbälte?", options: ["Alltid", "Endast på landsväg", "Endast vid hastigheter över 50 km/h"], correct: 0 },  
-            { question: "Vilken av följande fordon får köra i kollektivkörfält?", options: ["Motorcykel", "Buss i linjetrafik", "Taxi"], correct: 1 },  
-            { question: "Vad innebär högerregeln?", options: ["Att du alltid har företräde om du kommer från höger", "Att du ska lämna företräde åt trafik från höger", "Att du ska köra rakt fram i korsningar"], correct: 1 },  
-            { question: "Vad är syftet med mitträcken på vägar?", options: ["Att minska buller", "Att förhindra frontalkrockar", "Att öka framkomligheten"], correct: 1 },  
-            { question: "Hur fort får en A-traktor maximalt köra?", options: ["30 km/h", "40 km/h", "45 km/h"], correct: 0 },  
-            { question: "Vad innebär en vit rektangulär skylt med svart text under ett vägmärke?", options: ["Att skylten gäller hela dygnet", "Att skylten gäller en viss tid eller sträcka", "Att skylten är en rekommendation"], correct: 1 },  
-            { question: "Vad är högsta tillåtna hastighet för en bil med släp på motorväg?", options: ["80 km/h", "90 km/h", "100 km/h"], correct: 0 },  
-            { question: "Vad är den största risken med att köra för nära framförvarande bil?", options: ["Ökad bränsleförbrukning", "Minskad sikt", "Ökad risk för påkörning bakifrån"], correct: 2 },  
-            { question: "Vad betyder en gul vägskylt med röd kant och en svart symbol?", options: ["Påbud", "Förbud", "Varning"], correct: 2 },  
-            { question: "Hur påverkas bromssträckan om hastigheten fördubblas?", options: ["Den blir dubbelt så lång", "Den blir fyra gånger så lång", "Den blir tre gånger så lång"], correct: 1 },  
-            { question: "Vad innebär en blå rektangulär skylt med en vit P-symbol?", options: ["Tillfällig parkering tillåten", "Endast för elbilar", "Parkeringsförbud"], correct: 0 },  
-            { question: "Vilken regel gäller vid en cirkulationsplats?", options: ["Du ska lämna företräde åt fordon inne i rondellen", "Du har alltid företräde om du kör in i rondellen", "Du ska blinka vänster vid infart"], correct: 0 },  
-            { question: "När får du köra om på höger sida?", options: ["Aldrig", "Vid körning på motorväg med flera filer", "Endast i tät stadstrafik"], correct: 1 },  
-            { question: "Vilket av följande fordon får inte köra på motorväg?", options: ["Personbil", "Moped klass 1", "Traktor"], correct: 2 },  
-            { question: "Vad innebär det när en polis vinkar dig att stanna?", options: ["Att du kan ignorera signalen om du har bråttom", "Att du måste stanna omedelbart", "Att du bör sakta in men kan fortsätta"], correct: 1 },  
-            { question: "Vad är syftet med en vägkameror?", options: ["Att övervaka trafiken", "Att minska olyckor genom hastighetskontroll", "Att ge vägassistans"], correct: 1 },  
-            { question: "Vilket fordon får du köra med B-körkort?", options: ["Personbil och lätt lastbil", "Motorcykel", "Lastbil över 3,5 ton"], correct: 0 },  
-            { question: "Vad är högsta tillåtna hastighet för en lätt lastbil?", options: ["90 km/h", "110 km/h", "Ej reglerad separat"], correct: 2 },  
-                // Lägg till fler frågor här...
-        ];
-
-        let userResults = [];
-
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            loginSection.style.display = 'none';
-            menuSection.style.display = 'block';
-        });
-
-        document.getElementById('new-quiz').addEventListener('click', () => {
-            menuSection.style.display = 'none';
-            quizSection.style.display = 'block';
-            loadQuiz();
-        });
-
-        document.getElementById('view-results').addEventListener('click', () => {
-            menuSection.style.display = 'none';
-            resultsSection.style.display = 'block';
-            displayResults();
-        });
-
-        document.getElementById('back-to-menu').addEventListener('click', () => {
-            resultsSection.style.display = 'none';
-            menuSection.style.display = 'block';
-        });
-
-        function loadQuiz() {
-            const quizContainer = document.getElementById('quiz-container');
-            quizContainer.innerHTML = '';
-
-            questions.forEach((q, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.classList.add('question');
-
-                const questionText = document.createElement('p');
-                questionText.textContent = `${index + 1}. ${q.question}`;
-                questionDiv.appendChild(questionText);
-
-                q.options.forEach((option, i) => {
-                    const label = document.createElement('label');
-                    label.textContent = option;
-
-                    const input = document.createElement('input');
-                    input.type = 'radio';
-                    input.name = `question-${index}`;
-                    input.value = i;
-                    label.prepend(input);
-
-                    questionDiv.appendChild(label);
-                });
-
-                quizContainer.appendChild(questionDiv);
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
             });
+
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('menu-section').style.display = 'block';
+            } else {
+                alert(data.message);
+            }
         }
+
+        async function register(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+        }
+
+        async function saveResult(score) {
+            const response = await fetch('/save_result', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ score })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+        }
+
+        async function loadResults() {
+            const response = await fetch('/results');
+            const data = await response.json();
+
+            if (data.success) {
+                const resultsList = document.getElementById('results-list');
+                resultsList.innerHTML = '';
+                data.results.forEach((result, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `Prov ${index + 1}: ${result.score} rätt (${result.created_at})`;
+                    resultsList.appendChild(li);
+                });
+            } else {
+                alert(data.message);
+            }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', login);
+        document.getElementById('register-button').addEventListener('click', register);
+        document.getElementById('view-results').addEventListener('click', () => {
+            document.getElementById('menu-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'block';
+            loadResults();
+        });
 
         document.getElementById('quiz-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let score = 0;
+            const questions = document.querySelectorAll('.question');
 
             questions.forEach((q, index) => {
-                const selected = document.querySelector(`input[name="question-${index}"]:checked`);
-                if (selected && parseInt(selected.value) === q.correct) {
+                const selected = q.querySelector(`input[name="question-${index}"]:checked`);
+                if (selected && parseInt(selected.value) === correctAnswers[index]) {
                     score++;
                 }
             });
 
-            userResults.push(score);
-
-            if (score >= 52) {
-                alert(`Grattis! Du fick ${score} rätt och är godkänd!`);
-            } else {
-                alert(`Du fick ${score} rätt. Försök igen!`);
-            }
-
-            quizSection.style.display = 'none';
-            menuSection.style.display = 'block';
-            loginSection.style.display = 'block';
+            saveResult(score);
+            alert(`Du fick ${score} rätt!`);
         });
-
-        function displayResults() {
-            resultsList.innerHTML = '';
-            userResults.forEach((result, index) => {
-                const li = document.createElement('li');
-                li.textContent = `Prov ${index + 1}: ${result} rätt`;
-                resultsList.appendChild(li);
-            });
-        }
     </script>
+</head>
+<body>
+    <section id="login-section">
+        <h2>Logga in</h2>
+        <form id="login-form">
+            <label for="username">Användarnamn:</label>
+            <input type="text" id="username" required>
+            <label for="password">Lösenord:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Logga in</button>
+            <button type="button" id="register-button">Registrera</button>
+        </form>
+    </section>
+
+    <section id="menu-section" style="display:none;">
+        <h2>Meny</h2>
+        <button id="view-results">Visa resultat</button>
+    </section>
+
+    <section id="results-section" style="display:none;">
+        <h2>Dina tidigare resultat</h2>
+        <ul id="results-list"></ul>
+    </section>
 </body>
 </html>
