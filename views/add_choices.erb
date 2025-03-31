@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lägg till alternativ</title>
+    <link rel="stylesheet" type="text/css" href="/quiz.css?<%=Time.now.to_i%>">
+</head>
+<body>
+  <div class="container">
+    <h1>Lägg till alternativ för fråga #<%= @question_id %></h1>
+    
+    <form action="/admin/add_choices/<%= @question_id %>" method="POST">
+      <h2>Alternativ:</h2>
+
+      <label for="choice1">Alternativ 1:</label>
+      <input type="text" id="choice1" name="choices[]" required><br>
+
+      <label for="choice2">Alternativ 2:</label>
+      <input type="text" id="choice2" name="choices[]" required><br>
+
+      <label for="choice3">Alternativ 3:</label>
+      <input type="text" id="choice3" name="choices[]" required><br>
+
+      <label for="choice4">Alternativ 4:</label>
+      <input type="text" id="choice4" name="choices[]" required><br>
+
+      <h2>Vilket alternativ är korrekt?</h2>
+      <label for="correct_choice">Välj rätt alternativ (0-3):</label>
+      <input type="number" id="correct_choice" name="correct_choice" min="0" max="3" required><br>
+
+      <button type="submit">Spara alternativ</button>
+    </form>
+  </div>
+</body>
+</html>

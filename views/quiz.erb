@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Körkortsquiz</title>
+    <link rel="stylesheet" type="text/css" href="/quiz.css?<%=Time.now.to_i%>">
+  </head>
+<body>
+  <div class="container">
+    <h1>Körkortsquiz</h1>
+    <form action="/submit_quiz" method="POST">
+      <% @questions.each do |question| %>
+        <div class="question">
+          <h3><%= question['question'] %></h3>
+          <div class="choices">
+            <% question['choices'].each do |choice| %>
+              <label>
+                <input type="radio" name="<%= question['id'] %>" value="<%= choice['id'] %>">
+                <%= choice['choice_text'] %>
+              </label><br>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      <input type="submit" value="Skicka in">
+    </form>
+  </div>
+</body>
+</html>

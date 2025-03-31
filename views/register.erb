@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrera</title>
+  <link rel="stylesheet" type="text/css" href="/style.css?<%=Time.now.to_i%>">
+</head>
+<body>
+  <section class="register-section">
+    <div class="register-container">
+      <h2>Registrera</h2>
+      <% if @error %> <p class="error-message"><%= @error %></p> <% end %>
+      <form action="/register" method="POST" class="register-form">
+        <label for="username">Användarnamn:</label>
+        <input type="text" name="username" id="username" placeholder="Ange ditt användarnamn">
+        
+        <label for="password">Lösenord:</label>
+        <input type="password" name="password" id="password" placeholder="Ange ditt lösenord">
+        
+        <button type="submit" class="register-button">Registrera</button>
+      </form>
+    </div>
+  </section>
+</body>
+</html>

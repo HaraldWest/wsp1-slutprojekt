@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quizresultat</title>
+  <link rel="stylesheet" type="text/css" href="/quiz.css?<%=Time.now.to_i%>">
+</head>
+<body>
+  <div class="container">
+    <h1>Quizresultat</h1>
+    <div class="result">
+      <p>Du fick <%= @score %> av <%= @total_questions %> rätt.</p>
+      <a href="/" class="cta-button">Hem</a>
+      <a href="/quiz" class="cta-button">Ta quizet igen</a>
+    </div>
+  </div>
+</body>
+</html>

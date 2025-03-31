@@ -1,119 +1,67 @@
 <!DOCTYPE html>
 <html lang="sv">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Körkortsquiz</title>
-    <script>
-        async function login(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('menu-section').style.display = 'block';
-            } else {
-                alert(data.message);
-            }
-        }
-
-        async function register(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
-            alert(data.message);
-        }
-
-        async function saveResult(score) {
-            const response = await fetch('/save_result', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ score })
-            });
-
-            const data = await response.json();
-            alert(data.message);
-        }
-
-        async function loadResults() {
-            const response = await fetch('/results');
-            const data = await response.json();
-
-            if (data.success) {
-                const resultsList = document.getElementById('results-list');
-                resultsList.innerHTML = '';
-                data.results.forEach((result, index) => {
-                    const li = document.createElement('li');
-                    li.textContent = `Prov ${index + 1}: ${result.score} rätt (${result.created_at})`;
-                    resultsList.appendChild(li);
-                });
-            } else {
-                alert(data.message);
-            }
-        }
-
-        document.getElementById('login-form').addEventListener('submit', login);
-        document.getElementById('register-button').addEventListener('click', register);
-        document.getElementById('view-results').addEventListener('click', () => {
-            document.getElementById('menu-section').style.display = 'none';
-            document.getElementById('results-section').style.display = 'block';
-            loadResults();
-        });
-
-        document.getElementById('quiz-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            let score = 0;
-            const questions = document.querySelectorAll('.question');
-
-            questions.forEach((q, index) => {
-                const selected = q.querySelector(`input[name="question-${index}"]:checked`);
-                if (selected && parseInt(selected.value) === correctAnswers[index]) {
-                    score++;
-                }
-            });
-
-            saveResult(score);
-            alert(`Du fick ${score} rätt!`);
-        });
-    </script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Välkommen till Körkortsquiz</title>
+        <link rel="stylesheet" type="text/css" href="/style.css?<%=Time.now.to_i%>">
+    </head>
 <body>
-    <section id="login-section">
-        <h2>Logga in</h2>
-        <form id="login-form">
-            <label for="username">Användarnamn:</label>
-            <input type="text" id="username" required>
-            <label for="password">Lösenord:</label>
-            <input type="password" id="password" required>
-            <button type="submit">Logga in</button>
-            <button type="button" id="register-button">Registrera</button>
-        </form>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <h1>Välkommen till Körkortsquiz</h1>
+      <nav class="nav">
+            <% if session[:user_id] %>
+              <!-- If logged in, show log out link -->
+              <a href="/logout">Logga ut</a>
+            <% else %>
+              <!-- If not logged in, show log in and register links -->
+              <a href="/login">Logga in</a>
+              <a href="/register">Registrera</a>
+            <% end %>
+      </nav>
+    </div>
+  </header>
+
+    <section class="hero">
+    <div class="container">
+        <% if session[:user_id] %>
+        <h2>Välkommen tillbaka!</h2>
+        <p>Redo att testa dina kunskaper igen? Starta quizet nu!</p>
+        <a href="/quiz" class="cta-button">Gå till quiz</a>
+        <% else %>
+        <h2>Testa dina kunskaper med vår körkortsquiz</h2>
+        <p>Gör dig redo för teoriprovet på ett roligt och interaktivt sätt!</p>
+        <a href="/register" class="cta-button">Registrera dig nu</a>
+        <% end %>
+    </div>
     </section>
 
-    <section id="menu-section" style="display:none;">
-        <h2>Meny</h2>
-        <button id="view-results">Visa resultat</button>
-    </section>
 
-    <section id="results-section" style="display:none;">
-        <h2>Dina tidigare resultat</h2>
-        <ul id="results-list"></ul>
-    </section>
+  <section class="features">
+    <div class="container">
+      <div class="feature">
+        <h3>Över 1000 frågor</h3>
+        <p>Vi erbjuder ett stort urval av frågor som täcker alla ämnen i teoriprovet.</p>
+      </div>
+      <div class="feature">
+        <h3>Realistiska prov</h3>
+        <p>Våra quiz är utformade för att efterlikna det riktiga teoriprovet.</p>
+      </div>
+      <div class="feature">
+        <h3>Personliga resultat</h3>
+        <p>Få detaljerad feedback för att se dina framsteg och förbättra dig.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Körkortsquiz. Alla rättigheter förbehållna.</p>
+    </div>
+  </footer>
 </body>
 </html>

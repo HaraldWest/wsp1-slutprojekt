@@ -10,5 +10,7 @@ gem 'sqlite3'
 gem 'webrick'
 gem 'sinatra-activerecord'
 gem 'json'
+gem 'bcrypt'
+ 
 
 

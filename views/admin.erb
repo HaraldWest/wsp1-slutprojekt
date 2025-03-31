@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="/quiz.css?<%=Time.now.to_i%>">
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <h2>Lägg till ny fråga</h2>
+    <form action="/admin/add_question" method="POST">
+      <label for="question">Fråga:</label>
+      <input type="text" id="question" name="question" required><br>
+
+      <label for="alt1">Alternativ 1:</label>
+      <input type="text" id="alt1" name="alt1" required><br>
+
+      <label for="alt2">Alternativ 2:</label>
+      <input type="text" id="alt2" name="alt2" required><br>
+
+      <label for="correct_answer">Korrekt svar (ange det alternativet):</label>
+      <input type="text" id="correct_answer" name="correct_answer" required><br>
+
+      <button type="submit">Lägg till fråga</button>
+    </form>
+
+    <h2>Frågor</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fråga</th>
+          <th>Redigera</th>
+          <th>Ta bort</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @questions.each do |question| %>
+          <tr>
+            <td><%= question['id'] %></td>
+            <td><%= question['question'] %></td>
+            <td><a href="/admin/edit/<%= question['id'] %>">Redigera</a></td>
+            <td>
+              <form action="/admin/delete/<%= question['id'] %>" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Är du säker på att du vill ta bort denna fråga?');">Ta bort</button>
+              </form>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

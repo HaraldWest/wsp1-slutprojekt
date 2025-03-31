@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redigera Fråga</title>
+    <link rel="stylesheet" type="text/css" href="/quiz.css?<%=Time.now.to_i%>">
+</head>
+<body>
+  <div class="container">
+    <h1>Redigera Fråga</h1>
+
+    <form action="/admin/edit/<%= @question['id'] %>" method="POST">
+      <label for="question">Fråga:</label>
+      <input type="text" id="question" name="question" value="<%= @question['question'] %>" required>
+      <button type="submit">Uppdatera fråga</button>
+    </form>
+  </div>
+</body>
+</html>
